@@ -1,0 +1,21 @@
+version: '3'
+services:
+  mysqlhost:
+    image: mysql:8.0.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports:
+      - "33061:3306"
+    volumes:
+      - "./my.conf:/etc/mysql/conf.d/config-file.cnf"
+      - "./data:/var/lib/mysql:rw"
+
+  web-host:
+    build: ./web
+    ports:
+      - "5001:5000"
+    volumes:
+      - .:/code
+    env_file:
+      - .env
