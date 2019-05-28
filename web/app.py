@@ -1,8 +1,8 @@
-from flask import Flask
-from flask import jsonify
+from flask import Flask, jsonify, request
 import pymysql.cursors
 import logging
 import os
+import json
 
 def connect_mysql():
     connection = pymysql.connect(host=os.environ['MYSQL_HOST_NAME'],
@@ -27,12 +27,30 @@ def posts():
             sql = "SELECT * FROM posts"
             cursor.execute(sql)
             r = cursor.fetchall()
-            for row in r:
-                print('row')
-                print(r)
         except Exception as e:
             r = None
+        finally:
+            connection.close()
     return jsonify({'posts' : r})
 
 if __name__ == '__main__':
     app.run(debug=True,host='0.0.0.0')
+
+
+# Insert:
+@app.route("/newpost", methods=['POST'])
+def newpost():
+    if request.method == 'POST':
+        connection = connect_mysql()
+        with connection.cursor() as cursor:
+            try:
+                query = "insert into `posts` (`post_title`) values (%s)"
+                logging.warning('post_title')
+                logging.warning(request.json['post_title'])
+                cursor.execute(query, request.json['post_title'])
+                connection.commit()
+                return "Insert Successful"
+            except Exception as e:
+                logging.warning(e)
+            finally:
+                connection.close()

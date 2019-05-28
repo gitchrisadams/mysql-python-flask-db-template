@@ -4,6 +4,15 @@ mysql -u roo -p
 ```
 Then enter password
 
+## Changing the default MySQL password **** Important ***
+Docker exec into the mysql container.
+
+Login to mysql with default password
+Change root password with:
+```
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'YOUR_PASSWORD_HERE';
+```
+
 # Use the db:
 use mydb;
 

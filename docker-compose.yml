@@ -10,6 +10,8 @@ services:
     volumes:
       - "./my.conf:/etc/mysql/conf.d/config-file.cnf"
       - "./data:/var/lib/mysql:rw"
+    env_file:
+      - .env
 
   web-host:
     build: ./web
